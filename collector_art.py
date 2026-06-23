@@ -35,7 +35,7 @@ def main():
             part="snippet",
             q="AI art OR Midjourney OR Flux OR DALL E OR Ideogram OR Recraft OR ComfyUI OR Flux Kontext",
             order="viewCount",
-            maxResults=10,
+            maxResults=50,
             type="video"
         )
         
