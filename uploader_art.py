@@ -8,7 +8,7 @@ from google.auth.transport.requests import Request
 from googleapiclient.http import MediaFileUpload
 
 TOKEN_FILE = "token_art.pickle"
-APP_URL = "https://aipick-auto-youtube-ai-ranking.streamlit.app/"
+APP_URL = "https://youtube-ai-ranking-a2tehafmcqhepmtw5mfyf6.streamlit.app/"
 DATA_PATH = Path("data_art/latest.json")
 
 
