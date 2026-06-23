@@ -13,7 +13,17 @@ st.title("🔥 YouTube AI Ranking")
 today = datetime.now().strftime("%Y년 %m월 %d일")
 st.subheader(f"{today} AI 아트 인기 영상 TOP 50")
 
-st.info("💡 링크 클릭 시 새 탭에서 열립니다. 이 페이지는 그대로 두세요!")
+# 뒤로가기 버튼
+st.markdown(
+    '<a href="javascript:history.back()">'
+    '<button style="background-color:#333;color:white;'
+    'border:none;padding:10px 20px;border-radius:5px;'
+    'cursor:pointer;font-size:16px;">'
+    '⬅ 유튜브로 돌아가기</button></a>',
+    unsafe_allow_html=True
+)
+
+st.info("💡 링크 클릭 시 새 탭에서 열립니다.")
 
 data_path = Path("data_art/latest.json")
 
