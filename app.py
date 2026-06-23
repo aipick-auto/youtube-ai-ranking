@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import json
 from pathlib import Path
 from datetime import datetime
@@ -12,18 +13,6 @@ st.set_page_config(
 st.title("🔥 YouTube AI Ranking")
 today = datetime.now().strftime("%Y년 %m월 %d일")
 st.subheader(f"{today} AI 아트 인기 영상 TOP 50")
-
-# 뒤로가기 버튼
-st.markdown(
-    '<a href="javascript:history.back()">'
-    '<button style="background-color:#333;color:white;'
-    'border:none;padding:10px 20px;border-radius:5px;'
-    'cursor:pointer;font-size:16px;">'
-    '⬅ 유튜브로 돌아가기</button></a>',
-    unsafe_allow_html=True
-)
-
-st.info("💡 링크 클릭 시 새 탭에서 열립니다.")
 
 data_path = Path("data_art/latest.json")
 
@@ -49,13 +38,7 @@ else:
                 youtube_url = f"https://youtu.be/{video_id}" if video_id and video_id != "dummy" else ""
 
                 with cols[0]:
-                    if thumbnail_url and youtube_url:
-                        st.markdown(
-                            f'<a href="{youtube_url}" target="_blank" rel="noopener noreferrer">'
-                            f'<img src="{thumbnail_url}" width="100%"></a>',
-                            unsafe_allow_html=True
-                        )
-                    elif thumbnail_url:
+                    if thumbnail_url:
                         st.image(thumbnail_url, use_container_width=True)
 
                 with cols[1]:
@@ -65,13 +48,16 @@ else:
                     st.markdown(f"👁️ 조회수: {view_count}")
 
                     if youtube_url:
-                        st.markdown(
-                            f'<a href="{youtube_url}" target="_blank" rel="noopener noreferrer">'
-                            f'<button style="background-color:#FF0000;color:white;'
-                            f'border:none;padding:10px 20px;border-radius:5px;'
-                            f'cursor:pointer;font-size:16px;margin-top:10px;">'
-                            f'▶ 유튜브에서 보기</button></a>',
-                            unsafe_allow_html=True
+                        components.html(
+                            f'''
+                            <button onclick="window.open('{youtube_url}', '_blank')"
+                            style="background-color:#FF0000;color:white;
+                            border:none;padding:10px 20px;border-radius:5px;
+                            cursor:pointer;font-size:16px;margin-top:10px;">
+                            ▶ 유튜브에서 보기
+                            </button>
+                            ''',
+                            height=60
                         )
 
         st.divider()
