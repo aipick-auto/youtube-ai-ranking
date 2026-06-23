@@ -34,7 +34,6 @@ else:
                 view_count = item.get("viewCount", "")
                 video_id = item.get("videoId", "")
                 thumbnail_url = item.get("thumbnail", "")
-                youtube_url = f"https://youtu.be/{video_id}" if video_id and video_id != "dummy" else ""
 
                 with cols[0]:
                     if thumbnail_url:
@@ -46,12 +45,15 @@ else:
                     st.markdown(f"📺 채널: {channel}")
                     st.markdown(f"👁️ 조회수: {view_count}")
 
-                    if youtube_url:
-                        st.link_button(
-                            "▶ 유튜브에서 보기",
-                            youtube_url,
-                            use_container_width=False
-                        )
+                    if video_id and video_id != "dummy":
+                        if st.button(f"▶ 영상 보기", key=f"btn_{rank}"):
+                            st.session_state[f"play_{rank}"] = True
+
+                        if st.session_state.get(f"play_{rank}", False):
+                            st.video(f"https://www.youtube.com/watch?v={video_id}")
+                            if st.button(f"✕ 닫기", key=f"close_{rank}"):
+                                st.session_state[f"play_{rank}"] = False
+                                st.rerun()
 
         st.divider()
-        st.caption("💡 유튜브 시청 후 브라우저 뒤로가기(←)를 누르면 랭킹으로 돌아옵니다.")
+        st.caption("데이터는 매일 자동으로 업데이트됩니다.")
