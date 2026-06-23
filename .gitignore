@@ -1,0 +1,28 @@
+# 미디어 파일 (큰 파일)
+*.mp4
+*.wav
+*.mp3
+*.m4a
+
+# 인증/토큰 파일 (민감 정보)
+client_secrets.json
+token*.pickle
+*.pickle
+
+# 임시 폴더
+temp_art/
+temp/
+__pycache__/
+
+# 파이썬 캐시
+*.pyc
+*.pyo
+*.pyd
+
+# IDE 설정
+.vscode/
+.idea/
+
+# OS 파일
+.DS_Store
+Thumbs.db
