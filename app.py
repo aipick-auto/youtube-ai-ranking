@@ -35,32 +35,22 @@ else:
                 is_playing = st.session_state.get(f"play_{rank}", False)
 
                 if is_playing and video_id and video_id != "dummy":
-                    # 영상 재생 중
                     st.video(f"https://www.youtube.com/watch?v={video_id}")
                     st.markdown(f"### {rank}위 | {title}")
                     st.markdown(f"📺 {channel} | 👁️ {view_count}")
                     if st.button(
                         "✕ 영상 닫고 목록으로",
                         key=f"close_{rank}",
+                        type="primary",
                         use_container_width=True
                     ):
                         st.session_state[f"play_{rank}"] = False
                         st.rerun()
                 else:
-                    # 목록 표시
                     cols = st.columns([1, 3])
 
                     with cols[0]:
-                        if thumbnail_url and video_id and video_id != "dummy":
-                            if st.button(
-                                "▶",
-                                key=f"img_{rank}",
-                                use_container_width=True
-                            ):
-                                st.session_state[f"play_{rank}"] = True
-                                st.rerun()
-                            st.image(thumbnail_url, use_container_width=True)
-                        elif thumbnail_url:
+                        if thumbnail_url:
                             st.image(thumbnail_url, use_container_width=True)
 
                     with cols[1]:
@@ -74,7 +64,6 @@ else:
                             if st.button(
                                 "🎬 영상 보기",
                                 key=f"btn_{rank}",
-                                type="primary",
                                 use_container_width=True
                             ):
                                 st.session_state[f"play_{rank}"] = True
