@@ -1,13 +1,17 @@
 import os
+import json
 import pickle
 from datetime import datetime
+from pathlib import Path
 import google_auth_oauthlib.flow
 import googleapiclient.discovery
 from google.auth.transport.requests import Request
 from googleapiclient.http import MediaFileUpload
 
 TOKEN_FILE = "token_art.pickle"
-APP_URL = "https://youtube-ai-ranking.streamlit.app/"
+APP_URL = "https://aipick-auto-youtube-ai-ranking.streamlit.app/"
+DATA_PATH = Path("data_art/latest.json")
+
 
 def get_credentials():
     credentials = None
@@ -36,6 +40,35 @@ def get_credentials():
     return credentials
 
 
+def build_description(data, today):
+    """TOP 10 + 앱 링크 설명란 생성"""
+    desc = f"🔥 {today} AI 아트 인기 급상승 TOP 10\n\n"
+
+    # TOP 10
+    for item in data[:10]:
+        rank = item.get("rank", "")
+        title = item.get("title", "")
+        channel = item.get("channel", "")
+        view_count = item.get("viewCount", "")
+        video_id = item.get("videoId", "")
+        url = f"https://youtu.be/{video_id}" if video_id and video_id != "dummy" else ""
+
+        desc += f"{rank}위 | {title}\n"
+        desc += f"  채널: {channel} | 조회수: {view_count}\n"
+        if url:
+            desc += f"  🔗 {url}\n"
+        desc += "\n"
+
+    # 구분선 + 앱 링크
+    desc += "━━━━━━━━━━━━━━━━━━━━\n"
+    desc += f"📊 전체 50위 랭킹 보기\n"
+    desc += f"👉 {APP_URL}\n"
+    desc += "━━━━━━━━━━━━━━━━━━━━\n\n"
+    desc += "#유튜브AI랭킹 #AI아트랭킹 #오늘의AI아트 #인기AI툴 #AI아트"
+
+    return desc
+
+
 def upload_video():
     if not os.path.exists("client_secrets.json"):
         print("에러: client_secrets.json 파일이 없습니다!")
@@ -44,17 +77,32 @@ def upload_video():
         print("에러: youtube_ai_shorts.mp4 파일이 없습니다.")
         return
 
+    # 데이터 로드
+    if not DATA_PATH.exists():
+        print("에러: data_art/latest.json 파일이 없습니다!")
+        return
+
+    with open(DATA_PATH, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    if not data:
+        print("에러: 데이터가 비어있습니다.")
+        return
+
+    print(f"📦 데이터 {len(data)}개 로드됨")
+
     credentials = get_credentials()
     youtube = googleapiclient.discovery.build("youtube", "v3", credentials=credentials)
 
     today = datetime.now().strftime("%Y년 %m월 %d일")
 
-    desc = f"🔴▶️ 전체 랭킹 보기\n\n"
-    desc += f"{APP_URL}\n\n"
-    desc += f"{today} AI 아트 인기 급상승 TOP 10\n\n"
-    desc += f"#유튜브AI랭킹 #AI아트랭킹 #오늘의AI아트 #인기AI툴"
-
+    # 설명란 생성 (TOP 10 + 앱 링크)
+    desc = build_description(data, today)
     title = f"{today} AI 아트 인기 급상승 TOP 10 🔥"
+
+    print("\n--- 설명란 미리보기 ---")
+    print(desc)
+    print("----------------------\n")
 
     print("📤 영상 업로드 중...")
     request = youtube.videos().insert(
@@ -102,7 +150,7 @@ def upload_video():
                     "videoId": video_id,
                     "topLevelComment": {
                         "snippet": {
-                            "textOriginal": f"전체 랭킹 보기\n{APP_URL}"
+                            "textOriginal": f"📊 전체 50위 랭킹 보기\n👉 {APP_URL}"
                         }
                     }
                 }
