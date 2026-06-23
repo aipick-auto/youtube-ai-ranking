@@ -9,6 +9,31 @@ st.set_page_config(
     layout="wide"
 )
 
+# 버튼 색상 CSS
+st.markdown("""
+<style>
+/* 영상 보기 버튼 - 빨간색 */
+button[kind="secondary"] {
+    background-color: #FF0000 !important;
+    color: white !important;
+    border: none !important;
+}
+button[kind="secondary"]:hover {
+    background-color: #CC0000 !important;
+    color: white !important;
+}
+/* 닫기 버튼 - 파란색 (primary) */
+button[kind="primary"] {
+    background-color: #0066CC !important;
+    color: white !important;
+}
+button[kind="primary"]:hover {
+    background-color: #004C99 !important;
+    color: white !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 st.title("🔥 YouTube AI Ranking")
 today = datetime.now().strftime("%Y년 %m월 %d일")
 st.subheader(f"{today} AI 아트 인기 영상 TOP 50")
