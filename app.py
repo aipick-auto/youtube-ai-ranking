@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 import json
 from pathlib import Path
 from datetime import datetime
@@ -48,17 +47,11 @@ else:
                     st.markdown(f"👁️ 조회수: {view_count}")
 
                     if youtube_url:
-                        components.html(
-                            f'''
-                            <button onclick="window.open('{youtube_url}', '_blank')"
-                            style="background-color:#FF0000;color:white;
-                            border:none;padding:10px 20px;border-radius:5px;
-                            cursor:pointer;font-size:16px;margin-top:10px;">
-                            ▶ 유튜브에서 보기
-                            </button>
-                            ''',
-                            height=60
+                        st.link_button(
+                            "▶ 유튜브에서 보기",
+                            youtube_url,
+                            use_container_width=False
                         )
 
         st.divider()
-        st.caption("데이터는 매일 자동으로 업데이트됩니다.")
+        st.caption("💡 유튜브 시청 후 브라우저 뒤로가기(←)를 누르면 랭킹으로 돌아옵니다.")
