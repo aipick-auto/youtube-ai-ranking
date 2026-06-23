@@ -21,54 +21,61 @@ data_path = Path("data_art/latest.json")
 if not data_path.exists():
     st.error("데이터가 없습니다. collector_art.py를 먼저 실행해주세요.")
 else:
-    # JSON 파일 읽기
     with open(data_path, "r", encoding="utf-8") as f:
         data = json.load(f)
-    
-    # 데이터가 없으면 에러
+
     if not data:
         st.warning("데이터가 비어있습니다.")
     else:
-        # 랭킹 카드 보여주기
         for item in data:
             with st.container(border=True):
                 cols = st.columns([1, 3])
-                
-                # 썸네일
+
+                rank = item.get("rank", 0)
+                title = item.get("title", "")
+                channel = item.get("channel", "")
+                view_count = item.get("viewCount", "")
+                video_id = item.get("videoId", "")
+                thumbnail_url = item.get("thumbnail", "")
+                youtube_url = f"https://youtu.be/{video_id}" if video_id and video_id != "dummy" else ""
+
+                # 썸네일 (HTML로 변경)
                 with cols[0]:
-                    thumbnail_url = item.get("thumbnail", "")
                     if thumbnail_url:
-                        st.image(thumbnail_url, use_container_width=True)
-                
+                        st.markdown(
+                            f'<a href="{youtube_url}" target="_blank">'
+                            f'<img src="{thumbnail_url}" width="100%">'
+                            f'</a>',
+                            unsafe_allow_html=True
+                        )
+
                 # 정보
                 with cols[1]:
-                    rank = item.get("rank", 0)
-                    title = item.get("title", "")
-                    channel = item.get("channel", "")
-                    view_count = item.get("viewCount", "")
-                    video_id = item.get("videoId", "")
-                    
-                    # 순위
-                    st.markdown(f"**{rank}위**")
-                    
-                    # 제목
-                    st.markdown(f"### {title}")
-                    
-                    # 채널명
-                    st.markdown(f"**채널:** {channel}")
-                    
-                    # 조회수
-                    st.markdown(f"**조회수:** {view_count}")
-                    
-                    # 유튜브 링크 버튼
-                    if video_id and video_id != "dummy":
-                        youtube_url = f"https://youtu.be/{video_id}"
-                        st.link_button(
-                            "유튜브에서 보기", 
-                            youtube_url,
-                            use_container_width=False
+                    # 순위 + 제목 (클릭 가능)
+                    if youtube_url:
+                        st.markdown(
+                            f'**{rank}위** | '
+                            f'<a href="{youtube_url}" target="_blank" '
+                            f'style="color:white; text-decoration:none;">'
+                            f'{title}</a>',
+                            unsafe_allow_html=True
                         )
-        
-        # 하단 정보
+                    else:
+                        st.markdown(f"**{rank}위** | {title}")
+
+                    st.markdown(f"📺 **채널:** {channel}")
+                    st.markdown(f"👁️ **조회수:** {view_count}")
+
+                    # 유튜브 버튼 (새 탭)
+                    if youtube_url:
+                        st.markdown(
+                            f'<a href="{youtube_url}" target="_blank">'
+                            f'<button style="background-color:#FF0000; color:white; '
+                            f'border:none; padding:8px 16px; border-radius:5px; '
+                            f'cursor:pointer; font-size:14px;">'
+                            f'▶ 유튜브에서 보기</button></a>',
+                            unsafe_allow_html=True
+                        )
+
         st.divider()
         st.caption("데이터는 매일 자동으로 업데이트됩니다.")
